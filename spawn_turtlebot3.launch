@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+  <!-- Argument to set the TurtleBot3 model type -->
+  <arg name="model" default="burger" doc="model type [burger, waffle, waffle_pi]"/>
+  <param name="robot_description" command="xacro '$(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro'"/>
+
+  <!-- Argument for world file -->
+  <arg name="world_file" default="$(find gazebo_tutlesim)/worlds/robo.world"/>
+
+  <!-- Launch Gazebo with the specified world -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(arg world_file)"/>
+    <arg name="paused" value="false"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+  </include>
+
+  <!-- Spawn the TurtleBot3 model -->
+  <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" output="screen"
+        args="-urdf -model turtlebot3 -param robot_description -x 0 -y 0 -z 0.1 -Y 0"/>
+  
+  <!-- Launch TurtleBot3 teleoperation node -->
+  <node pkg="turtlebot3_teleop" type="turtlebot3_teleop_key" name="turtlebot3_teleop_keyboard" output="screen"/>
+</launch>
+
